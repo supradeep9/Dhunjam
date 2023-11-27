@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import { createContext, useReducer } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
+import Dashboard from "./components/Dashboard";
+
+import Login from "./components/Login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+export const userContext = createContext();
+const initialState = 2;
+function reducer(state, action) {
+  if (action.type === "save-id") {
+    return action.payload;
+  }
+  return state;
+}
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <userContext.Provider value={[state, dispatch]}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    </userContext.Provider>
   );
 }
 
